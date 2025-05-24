@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ poll.question }}</title>
+    <style>
+        body {
+            background-color: #121212; /* Dark background color */
+            color: #fff; /* White text color */
+            font-family: Arial, sans-serif; /* Specify font family */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+
+        h1 {
+            text-align: center; /* Center-align heading */
+            margin-top: 30px; /* Add top margin */
+        }
+
+        .choices-container {
+            display: flex; /* Use flexbox for layout */
+            justify-content: center; /* Center-align choices */
+            flex-wrap: wrap; /* Allow multiple rows */
+            margin-top: 20px; /* Add top margin */
+        }
+
+        .choice-btn {
+            padding: 10px 20px; /* Add padding */
+            margin: 5px; /* Add margin between buttons */
+            border: none; /* Remove border */
+            border-radius: 4px; /* Add border radius */
+            cursor: pointer; /* Add pointer cursor */
+            font-size: 16px; /* Set font size */
+            background-color: #007bff; /* Blue */
+            color: #fff; /* White text color */
+        }
+
+        .choice-btn.selected {
+            background-color: #28a745; /* Green */
+        }
+
+        .choice-btn.selected:hover {
+            background-color: #1c7631; /* Green */
+        }
+
+        .choice-btn:hover{
+            background-color: #0057b5; /* Blue */
+
+        }
+
+        #vote-btn {
+            padding: 10px 20px; /* Add padding */
+            background-color: #8a2be2; /* Violet color */
+            color: #fff; /* White text color */
+            border: none; /* Remove border */
+            border-radius: 4px; /* Add border radius */
+            cursor: pointer; /* Add pointer cursor */
+            margin-top: 20px; /* Add more top margin */
+            display: block; /* Make it a block-level element */
+            margin-left: auto; /* Center horizontally */
+            margin-right: auto; /* Center horizontally */
+            width: 200px; /* Set width */
+            font-size: large;
+            font-weight: 700;
+        }
+        
+        #vote-btn:hover {
+            background-color: #6a1e9b; /* Darker violet on hover */
+        }        
+        
+        
+        
+    </style>
+</head>
+<body>
+    <h1>{{ poll.question }}</h1>
+    {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+    <form id="poll-form" action="{% url 'polls:vote' poll.id %}" method="post">
+        {% csrf_token %}
+        <div class="choices-container">
+            {% for choice in poll.choice_set.all %}
+                <button type="button" class="choice-btn" data-choice-id="{{ choice.id }}">{{ choice.choice_text }}</button>
+            {% endfor %}
+        </div>
+        <input type="hidden" id="selected-choice" name="choice" value="">
+        <button type="submit" id="vote-btn" style="display: none;">Vote</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const choiceButtons = document.querySelectorAll('.choice-btn');
+
+            choiceButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove 'selected' class from all buttons
+                    choiceButtons.forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+
+                    // Add 'selected' class to the clicked button
+                    button.classList.add('selected');
+
+                    // Update the hidden input value with the selected choice
+                    document.getElementById('selected-choice').value = button.getAttribute('data-choice-id');
+
+                    // Show the vote button
+                    document.getElementById('vote-btn').style.display = 'block';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

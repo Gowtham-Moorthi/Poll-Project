@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Poll</title>
+    <style>
+        body {
+            background-color: #121212; /* Dark background color */
+            color: #fff; /* White text color */
+            font-family: Arial, sans-serif; /* Specify font family */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+
+        h1 {
+            text-align: center; /* Center-align heading */
+            margin-top: 30px; /* Add top margin */
+        }
+
+        form {
+            max-width: 600px; /* Set max width for form */
+            margin: auto; /* Center-align form */
+            padding: 20px; /* Add padding */
+            background-color: #333; /* Dark gray background for form */
+            border-radius: 8px; /* Add border radius */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Add shadow */
+        }
+
+        label {
+            display: block; /* Make labels block-level */
+            margin-bottom: 10px; /* Add bottom margin to labels */
+            font-weight: bold; /* Make labels bold */
+            color: #ccc; /* Light gray text color */
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px); /* Set width of input */
+            padding: 8px; /* Add padding */
+            border: 1px solid #555; /* Dark gray border */
+            border-radius: 4px; /* Add border radius */
+            background-color: #444; /* Dark gray background for input */
+            color: #fff; /* White text color */
+        }
+
+        button {
+            padding: 10px 20px; /* Add padding */
+            background-color: #007bff; /* Blue button background */
+            color: #fff; /* White button text color */
+            border: none; /* Remove border */
+            border-radius: 4px; /* Add border radius */
+            cursor: pointer; /* Add pointer cursor */
+            margin-top: 10px; /* Add top margin */
+            font-size: large;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Add Poll</h1>
+    <form id="add-poll-form" action="{% url 'polls:add_poll' %}" method="post">
+        {% csrf_token %}
+        <label for="question">Question:</label><br>
+        <input type="text" id="question" name="question"><br><br>
+
+        <div id="choices-container">
+            <div class="choice-container">
+                <label for="choice">Choice 1:</label><input type="text" class="choice" name="choice"><button type="button" class="delete-choice">Delete</button>
+            </div>
+        </div>
+
+        <button type="button" id="add-choice">Add Choice</button><br>
+
+        <button type="submit">Add Poll</button>
+    </form>
+
+    <script>
+        document.getElementById('add-choice').addEventListener('click', function() {
+            var choicesContainer = document.getElementById('choices-container');
+            var inputCount = choicesContainer.querySelectorAll('.choice-container').length + 1;
+            var choiceContainer = document.createElement('div');
+            choiceContainer.className = 'choice-container';
+            choicesContainer.appendChild(choiceContainer);
+
+            var label = document.createElement('label');
+            label.textContent = 'Choice ' + inputCount + ':';
+            choiceContainer.appendChild(label);
+
+            var newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.className = 'choice';
+            newInput.name = 'choice';
+            choiceContainer.appendChild(newInput);
+
+            var newButton = document.createElement('button');
+            newButton.type = 'button';
+            newButton.className = 'delete-choice';
+            newButton.textContent = 'Delete';
+            newButton.addEventListener('click', function() {
+                choiceContainer.remove();
+            });
+            choiceContainer.appendChild(newButton);
+        });
+    </script>
+</body>
+</html>

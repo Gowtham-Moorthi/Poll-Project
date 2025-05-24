@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <style>
+        body {
+            background-color: #121212; /* Dark background color */
+            color: #fff; /* White text color */
+            font-family: Arial, sans-serif; /* Specify font family */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+
+        h1 {
+            text-align: center; /* Center-align heading */
+            margin-top: 30px; /* Add top margin */
+        }
+
+        ul {
+            list-style-type: none; /* Remove list bullets */
+            padding: 0; /* Remove default padding */
+        }
+
+        li {
+            margin-bottom: 10px; /* Add bottom margin to list items */
+        }
+
+        .btn {
+            display: inline-block; /* Display as block-level element */
+            padding: 10px 20px; /* Add padding */
+            text-decoration: none; /* Remove underline */
+            border-radius: 4px; /* Add border radius */
+            cursor: pointer; /* Add pointer cursor */
+            font-size: 16px; /* Set font size */
+            margin-right: 10px; /* Add right margin */
+            color: #fff; /* White text color */
+            font-weight: bold; /* Bold font weight */
+            text-transform: uppercase; /* Uppercase text */
+            border: none; /* Remove border */
+        }
+
+        .btn-view {
+            background-color: #8a2be2; /* Violet color */
+        }
+
+        .btn-view:hover {
+            background-color: #6a1e9b; /* Darker violet on hover */
+        }
+
+        .btn-delete {
+            background-color: #ff4500; /* Red color */
+        }
+
+        .btn-delete:hover {
+            background-color: #cc3700; /* Darker red on hover */
+        }
+
+        .btn-add {
+            background-color: #4682b4; /* Steel blue color */
+        }
+
+        .btn-add:hover {
+            background-color: #2e587c; /* Darker steel blue on hover */
+        }
+
+        .btn-reset {
+            background-color: #6B8E23; /* Darker olive green on hover */
+        }
+
+        .btn-reset:hover {
+            background-color: #556B2F; /* Dark olive green on hover */
+        }
+
+        .poll-question {
+            font-size: 20px; /* Larger font size for poll questions */
+            cursor: pointer; /* Add pointer cursor to poll question */
+            color: #fff; /* White color for poll question */
+        }
+
+        .poll-question:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Available Polls</h1>
+    <ul>
+        {% for poll in polls %}
+            <li>
+                <a href="{% url 'polls:poll_detail' poll.id %}" class="poll-question">{{ poll.question }}</a>
+                <a href="{% url 'polls:results' poll.id %}" class="btn btn-view">View Results</a>
+                <a href="{% url 'polls:reset_poll' poll.id %}" onclick="alert('Poll Reset...');" class="btn btn-reset">Reset</a>
+                <a href="{% url 'polls:delete_poll' poll.id %}" onclick="alert('Poll deleted...');" class="btn btn-delete">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'polls:add_poll' %}" class="btn btn-add">Add Poll</a>
+    
+</body>
+</html>

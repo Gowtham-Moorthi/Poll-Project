@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #121212; /* Dark background color */
+            color: #fff; /* White text color */
+            font-family: Arial, sans-serif; /* Specify font family */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+
+        h1 {
+            text-align: center; /* Center-align heading */
+            margin-top: 30px; /* Add top margin */
+        }
+
+        .container {
+            max-width: 600px; /* Set max width */
+            margin: auto; /* Center-align container */
+        }
+
+        .progress-bar {
+            background-color: #007bff; /* Blue progress bar */
+            padding: 10px; /* Add padding */
+            border-radius: 4px; /* Add border radius */
+            margin-bottom: 10px; /* Add bottom margin */
+        }
+
+        .total-responses {
+            text-align: center; /* Center-align total responses */
+            margin-bottom: 20px; /* Add bottom margin */
+        }
+
+        .back-to-home {
+            display: block; /* Convert to block element */
+            width: 200px; /* Set width */
+            margin: auto; /* Center-align */
+            text-align: center; /* Center-align text */
+            padding: 10px; /* Add padding */
+            background-color: #28a745; /* Green background color */
+            color: #fff; /* White text color */
+            text-decoration: none; /* Remove underline */
+            border-radius: 4px; /* Add border radius */
+            margin-top: 20px; /* Add top margin */
+        }
+    </style>
+</head>
+<body>
+    <h1>Results for "{{ poll.question }}"</h1>
+    <div style="max-width: 600px; margin: auto;">
+        <canvas id="pollChart" width="400" height="400"></canvas>
+    </div>
+    <p class="total-responses">Total Responses: {{ total_responses }}</p>
+    <a href="{% url 'polls:home' %}" class="back-to-home">Back to Home</a>
+
+    <script>
+        // Get the poll data from Django template
+        const pollData = {
+            labels: [{% for choice in poll.choice_set.all %}"{{ choice.choice_text }}",{% endfor %}],
+            datasets: [{
+                label: 'Votes',
+                data: [{% for choice in poll.choice_set.all %}{{ choice.votes }},{% endfor %}],
+                backgroundColor: [ // Unique colors for each bar
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 99, 132, 0.2)', // Repeat colors if more choices
+                ],
+                borderColor: [ // Border colors
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 99, 132, 1)', // Repeat colors if more choices
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Create the chart
+        const ctx = document.getElementById('pollChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: pollData,
+            options: {
+                indexAxis: 'y', // Horizontal bar chart
+                responsive: true,
+                maintainAspectRatio: false, // Allow resizing
+                scales: {
+                    y: {
+                        beginAtZero: true, // Start y-axis at zero
+                        ticks: {
+                            precision: 0 // Display only integer values
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            stepSize: 1 // Set step size to 1 to display only integers
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
